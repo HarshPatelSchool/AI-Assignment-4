@@ -40,9 +40,12 @@ public class Board {
         return board; //Returns the completed board
     }
 
-
     public int getVal(int row, int column) {
-        return board[row][column]; //Gets val at coordinate. Array is in form row, column.
+        try {
+            return board[row][column]; //Gets val at coordinate.
+        }catch (Exception e) {
+            return Integer.MIN_VALUE;
+        }
     }
 
     /**
