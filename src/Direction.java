@@ -7,4 +7,8 @@ public enum Direction {
     Direction(int i) {
         value = i;
     }
+
+    public int getValue() {
+        return value;
+    }
 }
