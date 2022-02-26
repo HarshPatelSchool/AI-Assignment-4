@@ -3,6 +3,7 @@ import java.util.Random;
 
 public class Agent {
     private int row, column;
+    private double cost;
     private Board b;
 
     /**
@@ -11,10 +12,12 @@ public class Agent {
      * @param row    Starting row
      * @param column Starting column
      * @param board  Board to start on
+     * @param cost   Cost per action
      */
-    public Agent(int row, int column, Board board) {
+    public Agent(int row, int column, Board board, double cost) {
         this.row = row;
         this.column = column;
+        this.cost = cost;
         b = board;
     }
 
@@ -25,7 +28,7 @@ public class Agent {
      * @param a     Annealing value
      * @return Best Q Direction
      */
-    public Direction bestAction(double[][][] oldQs, int a) {
+    public Direction bestAction(double[][][] oldQs, double a) {
         double up, left, down, right;
         /* Gets Q values from current state and making a move */
         up = getNewQDir(oldQs, row - 1, column, a);
@@ -36,7 +39,7 @@ public class Agent {
         /* Gets the best Q(s,a) value and direction action for that*/
         double[] actions = new double[]{up, right, down, left};
         int index = 0; //Index of best Q
-        double max = Double.MIN_VALUE; //Best Q
+        double max = Integer.MIN_VALUE; //Best Q
         for (int i = 0; i < actions.length; i++) {
             if (max < actions[i]) {
                 max = actions[i];
@@ -56,7 +59,7 @@ public class Agent {
                 oldQs[row + 1][column][0] = down;
                 return Direction.DOWN;
             case 3: //LEFT
-                oldQs[row][column + 1][0] = left;
+                oldQs[row][column - 1][0] = left;
                 return Direction.LEFT;
             default: //Default case. Mainly one here for Java to be happy
                 return Direction.UP;
@@ -72,16 +75,16 @@ public class Agent {
      * @param a      Annealing value
      * @return Q after action
      */
-    private double getNewQDir(double[][][] oldQs, int row, int column, int a) {
+    private double getNewQDir(double[][][] oldQs, int row, int column, double a) {
         double prevQ, newQ;
         double y = 0.9; //Weight of how valuable next step after action is
         try {
             prevQ = oldQs[row][column][0];
             newQ = prevQ //Old Utility
-                    + a * (b.getVal(row, column) //Action Reward
+                    + a * (b.getVal(row, column) + cost //Action Reward
                     + y * maxA(oldQs, row, column) - prevQ); //Potential Future reward
         } catch (Exception e) { //If out of bounds return smallest value instead so it is ignored
-            newQ = Double.MIN_VALUE;
+            newQ = Integer.MIN_VALUE;
         }
         return newQ;
     }
@@ -118,7 +121,7 @@ public class Agent {
         try {
             r = oldQs[row][column][0]; //Get Q at that row and column
         } catch (Exception e) {  //If out of bounds return smallest value so it is ignored
-            r = Double.MIN_VALUE;
+            r = Integer.MIN_VALUE;
         }
         return r;
     }
@@ -161,5 +164,13 @@ public class Agent {
             row = nrow;
             column = ncolumn;
         }
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
     }
 }
