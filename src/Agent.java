@@ -1,7 +1,9 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class Agent {
-    private int row, column;
+    public int row, column;
+    private int prevRow, prevCol;
     private Board b;
 
     /**
@@ -66,8 +68,59 @@ public class Agent {
         }
         return r;
     }
-
+    private Direction updateDir (Direction d, double prob){
+        Random rng = new Random();
+        int changeDir = 0;
+        double chance = 1-prob;
+        double ran = Math.round(rng.nextDouble() * 100.0) / 100.0;
+        double tr = prob + chance/2;
+        if(ran < prob){
+        }
+        else if (ran < tr){
+            changeDir = 1;
+        }
+        else{
+            changeDir = 2;
+        }
+        switch (changeDir){
+            case 0:
+                break;
+            case 1:
+                d = d.changeDirL(d);
+                break;
+            case 2:
+                d = d.changeDirR(d);
+                break;
+        }
+        return d;
+    }
     public void move(Direction d, double prob){
-
+        d = updateDir(d,prob);
+        switch (d){
+            case UP:
+                System.out.println("Going up");
+                prevCol = column;
+                column++;
+                break;
+            case RIGHT:
+                System.out.println("Going Right");
+                prevRow = row;
+                row++;
+                break;
+            case DOWN:
+                System.out.println("Going Down");
+                prevCol = column;
+                column--;
+                break;
+            case LEFT:
+                System.out.println("Going Left");
+                prevRow = row;
+                row--;
+                break;
+        }
+    }
+    public void revertmove (){
+        row = prevRow;
+        column = prevCol;
     }
 }
