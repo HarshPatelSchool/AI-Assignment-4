@@ -7,7 +7,6 @@ public class Main {
     // every part of the 3D array pick the biggest value for the output 
     // X, Y, AND MOVE for output 
     public static void main(String[] args) throws IOException {
-<<<<<<< HEAD
         File inputFile = new File(args[0]);
         Double seconds = Double.parseDouble(args[1]);;
         Double probability = Double.parseDouble(args[2]);
