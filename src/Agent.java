@@ -31,10 +31,12 @@ public class Agent {
     public Direction bestAction(double[][][] oldQs, double a) {
         double up, left, down, right;
         /* Gets Q values from current state and making a move */
-        up = getNewQDir(oldQs, row - 1, column, a);
-        left = getNewQDir(oldQs, row, column - 1, a);
-        down = getNewQDir(oldQs, row + 1, column, a);
-        right = getNewQDir(oldQs, row, column + 1, a);
+        up = getNewQDir(oldQs, row - 1, column, a, Direction.UP);
+        right = getNewQDir(oldQs, row, column + 1, a, Direction.RIGHT);
+        down = getNewQDir(oldQs, row + 1, column, a, Direction.DOWN);
+        left = getNewQDir(oldQs, row, column - 1, a, Direction.LEFT);
+
+
 
         /* Gets the best Q(s,a) value and direction action for that*/
         double[] actions = new double[]{up, right, down, left};
@@ -47,19 +49,24 @@ public class Agent {
             }
         }
 
+        for(int j = 0; j<4; j++){
+            if(actions[j]==Integer.MIN_VALUE)
+                oldQs[row][column][j] = actions[j];
+        }
+
         /* Returns direction of best Q(s,a) */
         switch (index) { //Only update on best Q, not the action that is taken
             case 0: //UP
-                oldQs[row - 1][column][0] = up;
+                oldQs[row][column][Direction.UP.getValue()] = up;
                 return Direction.UP;
             case 1: //RIGHT
-                oldQs[row][column + 1][0] = right;
+                oldQs[row][column][Direction.RIGHT.getValue()] = right;
                 return Direction.RIGHT;
             case 2: //DOWN
-                oldQs[row + 1][column][0] = down;
+                oldQs[row][column][Direction.DOWN.getValue()] = down;
                 return Direction.DOWN;
             case 3: //LEFT
-                oldQs[row][column - 1][0] = left;
+                oldQs[row][column][Direction.LEFT.getValue()] = left;
                 return Direction.LEFT;
             default: //Default case. Mainly one here for Java to be happy
                 return Direction.UP;
@@ -75,11 +82,11 @@ public class Agent {
      * @param a      Annealing value
      * @return Q after action
      */
-    private double getNewQDir(double[][][] oldQs, int row, int column, double a) {
+    private double getNewQDir(double[][][] oldQs, int row, int column, double a, Direction d) {
         double prevQ, newQ;
         double y = 0.9; //Weight of how valuable next step after action is
         try {
-            prevQ = oldQs[row][column][0];
+            prevQ = oldQs[row][column][d.getValue()];
             newQ = prevQ //Old Utility
                     + a * (b.getVal(row, column) + cost //Action Reward
                     + y * maxA(oldQs, row, column) - prevQ); //Potential Future reward
@@ -98,32 +105,9 @@ public class Agent {
      * @return Best Q from all possible actions
      */
     private double maxA(double[][][] oldQs, int row, int column) {
-        double[] storage = new double[4];
-        storage[0] = getQDir(oldQs, row - 1, column); //UP
-        storage[1] = getQDir(oldQs, row, column - 1); //LEFT
-        storage[2] = getQDir(oldQs, row + 1, column); //DOWN
-        storage[3] = getQDir(oldQs, row, column + 1);//RIGHT
-
+        double[] storage = oldQs[row][column].clone();
         Arrays.sort(storage); //Sorts from least to greatest
         return storage[3]; //Greatest Q value amongst the actions
-    }
-
-    /**
-     * Gets Q value from row and column or smallest number if out of bounds
-     *
-     * @param oldQs  Old Qs
-     * @param row    row to check
-     * @param column column to check
-     * @return Q value of row column on the board or smallest double if out of bounds
-     */
-    private double getQDir(double[][][] oldQs, int row, int column) {
-        double r;
-        try {
-            r = oldQs[row][column][0]; //Get Q at that row and column
-        } catch (Exception e) {  //If out of bounds return smallest value so it is ignored
-            r = Integer.MIN_VALUE;
-        }
-        return r;
     }
 
     /**

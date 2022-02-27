@@ -8,7 +8,7 @@ public class Main {
     // X, Y, AND MOVE for output 
     public static void main(String[] args) throws IOException {
         File inputFile = new File(args[0]);
-        Double seconds = Double.parseDouble(args[1]);;
+        Double seconds = Double.parseDouble(args[1]);
         Double probability = Double.parseDouble(args[2]);
         Double constantRewards = Double.parseDouble(args[3]);
 
@@ -16,45 +16,42 @@ public class Main {
         Board board = new Board(inputFile);
         int[][] b = board.getBoard();
 
-        int[][][] map = new int[b.length][b[0].length][4];
+        Search s = new Search(board, probability, constantRewards);
+        s.beginSearch(seconds);
+        double[][][] map = s.getqValues();
+        output(board, map);
+    }
 
-        Double nanoseconds = seconds * 1000000000;
-
-        long start = System.nanoTime();
-        // run Q function 
-        long finish = System.nanoTime();
-
-        //printing output:
-        for(int i = 0; i< map.length; i++){
-            for(int j = 0; j < map[i].length; j++){
-                int maxNum=-1;
-                int k = 0;
-                for (int x : map[i][j]) {
-                    if (x > maxNum){
-                        maxNum = x;
-                        k = k+1;
+    private static void output(Board b, double[][][] map){
+        for(int row = 0; row < map.length; row++){
+            for(int col = 0; col < map[0].length; col++){
+                if(b.getVal(row, col)!=0)
+                    System.out.print("TERMINATE\t");
+                else{
+                    double maxNum = Integer.MIN_VALUE;
+                    int k = 0;
+                    for(int i = 0; i<map[row][col].length; i++){
+                        if(maxNum < map[row][col][i]){
+                            maxNum = map[row][col][i];
+                            k = i;
+                        }
+                    }
+                    if (k == 0){
+                        System.out.print("UP       \t");
+                    }
+                    if (k == 1){
+                        System.out.print("RIGHT    \t");
+                    }
+                    if (k==2){
+                        System.out.print("DOWN     \t");
+                    }
+                    if (k==3){
+                        System.out.print("LEFT     \t");
                     }
                 }
-                System.out.println(k+" "+ maxNum);
-                if (k == 0){
-                    System.out.print("UP ");
-                }
-                if (k == 1){
-                    System.out.print("DOWN ");
-                }
-                if (k==2){
-                    System.out.print("RIGHT ");
-                }
-                if (k==3){
-                    System.out.print("LEFT ");
-                }
-                System.out.println("X:"+i+" Y:"+j+ " max value of move:"+maxNum);
             }
             System.out.println();
         }
-
-        System.out.println("input values " + seconds + " "+ probability+ " "+constantRewards);
     }
-
 }
 
