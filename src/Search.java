@@ -2,6 +2,7 @@ import java.util.Random;
 
 public class Search {
     double[][][] qValues;
+    boolean[][][] qUpdated;
     Board b;
     int row, col;
     double prob, cost;
@@ -14,6 +15,8 @@ public class Search {
         row = vals.length;
         col = vals[0].length;
         qValues = new double[row][col][4]; //Stores Q value at coordinate. Order of actions is {UP, RIGHT, DOWN, LEFT}
+        qUpdated = new boolean[row][col][4]; //Stores updated Q values. Order of actions is {UP, RIGHT, DOWN, LEFT}
+
     }
 
     public void beginSearch(double time) {
@@ -30,7 +33,7 @@ public class Search {
             } while (b.getVal(nrow, ncol) != 0);
             Agent agent = new Agent(nrow, ncol, b, cost);
             while (b.getVal(agent.getRow(), agent.getColumn()) == 0) {
-                Direction d = agent.bestAction(qValues, annealing);
+                Direction d = agent.bestAction(qValues, qUpdated, annealing);
                 agent.move(d, prob);
             }
         }
@@ -39,5 +42,9 @@ public class Search {
 
     public double[][][] getqValues() {
         return qValues;
+    }
+
+    public boolean[][][] getqUpdated() {
+        return qUpdated;
     }
 }

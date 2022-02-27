@@ -28,16 +28,16 @@ public class Agent {
      * @param a     Annealing value
      * @return Best Q Direction
      */
-    public Direction bestAction(double[][][] oldQs, double a) {
+    public Direction bestAction(double[][][] oldQs, boolean[][][] updatedQs, double a) {
         double up, left, down, right;
-        if(row == 3 && column == 1) {
-           System.out.println("Test");
-        }
+       //if(row == 1 && column == 1) {
+       //  System.out.println("Test");
+       // }
         /* Gets Q values from current state and making a move */
-        up = getNewQDir(oldQs, row - 1, column, a, Direction.UP);
-        right = getNewQDir(oldQs, row, column + 1, a, Direction.RIGHT);
-        down = getNewQDir(oldQs, row + 1, column, a, Direction.DOWN);
-        left = getNewQDir(oldQs, row, column - 1, a, Direction.LEFT);
+        up = getNewQDir(oldQs,updatedQs, row - 1, column, a, Direction.UP);
+        right = getNewQDir(oldQs, updatedQs,row, column + 1, a, Direction.RIGHT);
+        down = getNewQDir(oldQs,updatedQs, row + 1, column, a, Direction.DOWN);
+        left = getNewQDir(oldQs, updatedQs,row, column - 1, a, Direction.LEFT);
 
 
         /* Gets the best Q(s,a) value and direction action for that*/
@@ -60,15 +60,19 @@ public class Agent {
         switch (index) { //Only update on best Q, not the action that is taken
             case 0: //UP
                 oldQs[row][column][Direction.UP.getValue()] = up;
+                updatedQs[row][column][Direction.UP.getValue()] = true;
                 return Direction.UP;
             case 1: //RIGHT
                 oldQs[row][column][Direction.RIGHT.getValue()] = right;
+                updatedQs[row][column][Direction.RIGHT.getValue()] = true;
                 return Direction.RIGHT;
             case 2: //DOWN
                 oldQs[row][column][Direction.DOWN.getValue()] = down;
+                updatedQs[row][column][Direction.DOWN.getValue()] = true;
                 return Direction.DOWN;
             case 3: //LEFT
                 oldQs[row][column][Direction.LEFT.getValue()] = left;
+                updatedQs[row][column][Direction.LEFT.getValue()] = true;
                 return Direction.LEFT;
             default: //Default case. Mainly here for Java to be happy
                 return null;
@@ -84,14 +88,14 @@ public class Agent {
      * @param a      Annealing value
      * @return Q after action
      */
-    private double getNewQDir(double[][][] oldQs, int row, int column, double a, Direction d) {
+    private double getNewQDir(double[][][] oldQs, boolean[][][] updatedQs, int row, int column, double a, Direction d) {
         double prevQ, newQ;
         double y = 0.9; //Weight of how valuable next step after action is
         try {
             prevQ = oldQs[this.row][this.column][d.getValue()];
             newQ = prevQ //Old Utility
                     + a * (b.getVal(row, column) + cost //Action Reward
-                    + y * maxA(oldQs, row, column) - prevQ); //Potential Future reward
+                    + y * maxA(oldQs,updatedQs, row, column) - prevQ); //Potential Future reward
         } catch (Exception e) { //If out of bounds return smallest value instead so it is ignored
             newQ = Integer.MIN_VALUE;
         }
@@ -106,10 +110,18 @@ public class Agent {
      * @param column Column to check actions from
      * @return Best Q from all possible actions
      */
-    private double maxA(double[][][] oldQs, int row, int column) {
-        double[] storage = oldQs[row][column].clone();
-        Arrays.sort(storage); //Sorts from least to greatest
-        return storage[3]; //Greatest Q value amongst the actions
+    private double maxA(double[][][] oldQs, boolean[][][] updatedQs, int row, int column) {
+        double max = Integer.MIN_VALUE;
+        double[] storage = oldQs[row][column];
+        boolean[] checked = updatedQs[row][column];
+        for(int i = 0; i<storage.length; i++){
+            if(max < storage[i] && checked[i]){
+                max = storage[i];
+            }
+        }
+        if(max != Integer.MIN_VALUE)
+            return max;
+        else return 0;
     }
 
     /**

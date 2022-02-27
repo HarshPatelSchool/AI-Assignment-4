@@ -19,10 +19,11 @@ public class Main {
         s.beginSearch(seconds);
 
         double[][][] map = s.getqValues();
-        output(board, map);
+        boolean[][][] checked = s.getqUpdated();
+        output(board, map, checked);
     }
 
-    private static void output(Board b, double[][][] map) {
+    private static void output(Board b, double[][][] map, boolean[][][] checked) {
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map[0].length; col++) {
                 if (b.getVal(row, col) != 0)
@@ -31,7 +32,7 @@ public class Main {
                     double maxNum = Integer.MIN_VALUE;
                     int k = 0;
                     for (int i = 0; i < map[row][col].length; i++) {
-                        if (maxNum < map[row][col][i]) {
+                        if (maxNum < map[row][col][i] && checked[row][col][i]) {
                             maxNum = map[row][col][i];
                             k = i;
                         }
