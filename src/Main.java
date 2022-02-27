@@ -2,10 +2,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
-    // read in file name and generate board map for that 
+    // read in file name and generate board map for that
     // keep track of seconds - use nanoseconds instead of miliseconds
-    // every part of the 3D array pick the biggest value for the output 
-    // X, Y, AND MOVE for output 
+    // every part of the 3D array pick the biggest value for the output
+    // X, Y, AND MOVE for output
     public static void main(String[] args) throws IOException {
         File inputFile = new File(args[0]);
         Double seconds = Double.parseDouble(args[1]);
@@ -14,7 +14,6 @@ public class Main {
 
         // File boardTxt = new File("boards/sample.txt");
         Board board = new Board(inputFile);
-        int[][] b = board.getBoard();
 
         Search s = new Search(board, probability, constantRewards);
         s.beginSearch(seconds);

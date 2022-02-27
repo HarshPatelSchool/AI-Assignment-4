@@ -9,7 +9,7 @@ public class GenerateBoard {
     }
 
     public static void genBoard(int size) throws IOException {
-        Writer fileWriter = new FileWriter("board.txt");
+        Writer fileWriter = new FileWriter("src/boards/board.txt");
         int boardSize = size;
         int temp;
         Random rng = new Random();

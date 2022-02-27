@@ -13,7 +13,7 @@ public class Search {
         int[][] vals = b.getBoard();
         row = vals.length;
         col = vals[0].length;
-        qValues = new double[row][col][4]; //Stores Q value at coordinate
+        qValues = new double[row][col][4]; //Stores Q value at coordinate. Order of actions is {UP, RIGHT, DOWN, LEFT}
     }
 
     public void beginSearch(double time) {

@@ -30,12 +30,14 @@ public class Agent {
      */
     public Direction bestAction(double[][][] oldQs, double a) {
         double up, left, down, right;
+        if(row == 3 && column == 1) {
+           System.out.println("Test");
+        }
         /* Gets Q values from current state and making a move */
         up = getNewQDir(oldQs, row - 1, column, a, Direction.UP);
         right = getNewQDir(oldQs, row, column + 1, a, Direction.RIGHT);
         down = getNewQDir(oldQs, row + 1, column, a, Direction.DOWN);
         left = getNewQDir(oldQs, row, column - 1, a, Direction.LEFT);
-
 
 
         /* Gets the best Q(s,a) value and direction action for that*/
@@ -68,8 +70,8 @@ public class Agent {
             case 3: //LEFT
                 oldQs[row][column][Direction.LEFT.getValue()] = left;
                 return Direction.LEFT;
-            default: //Default case. Mainly one here for Java to be happy
-                return Direction.UP;
+            default: //Default case. Mainly here for Java to be happy
+                return null;
         }
     }
 
@@ -86,7 +88,7 @@ public class Agent {
         double prevQ, newQ;
         double y = 0.9; //Weight of how valuable next step after action is
         try {
-            prevQ = oldQs[row][column][d.getValue()];
+            prevQ = oldQs[this.row][this.column][d.getValue()];
             newQ = prevQ //Old Utility
                     + a * (b.getVal(row, column) + cost //Action Reward
                     + y * maxA(oldQs, row, column) - prevQ); //Potential Future reward
