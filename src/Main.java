@@ -18,34 +18,35 @@ public class Main {
 
         Search s = new Search(board, probability, constantRewards);
         s.beginSearch(seconds);
+
         double[][][] map = s.getqValues();
         output(board, map);
     }
 
-    private static void output(Board b, double[][][] map){
-        for(int row = 0; row < map.length; row++){
-            for(int col = 0; col < map[0].length; col++){
-                if(b.getVal(row, col)!=0)
+    private static void output(Board b, double[][][] map) {
+        for (int row = 0; row < map.length; row++) {
+            for (int col = 0; col < map[0].length; col++) {
+                if (b.getVal(row, col) != 0)
                     System.out.print("TERMINATE\t");
-                else{
+                else {
                     double maxNum = Integer.MIN_VALUE;
                     int k = 0;
-                    for(int i = 0; i<map[row][col].length; i++){
-                        if(maxNum < map[row][col][i]){
+                    for (int i = 0; i < map[row][col].length; i++) {
+                        if (maxNum < map[row][col][i]) {
                             maxNum = map[row][col][i];
                             k = i;
                         }
                     }
-                    if (k == 0){
+                    if (k == 0) {
                         System.out.print("UP       \t");
                     }
-                    if (k == 1){
+                    if (k == 1) {
                         System.out.print("RIGHT    \t");
                     }
-                    if (k==2){
+                    if (k == 2) {
                         System.out.print("DOWN     \t");
                     }
-                    if (k==3){
+                    if (k == 3) {
                         System.out.print("LEFT     \t");
                     }
                 }

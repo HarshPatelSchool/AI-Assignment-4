@@ -4,6 +4,7 @@ public enum Direction {
     DOWN(2),
     LEFT(3);
     private final int value;
+
     Direction(int i) {
         value = i;
     }

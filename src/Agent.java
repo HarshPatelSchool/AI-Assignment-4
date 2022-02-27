@@ -49,8 +49,8 @@ public class Agent {
             }
         }
 
-        for(int j = 0; j<4; j++){
-            if(actions[j]==Integer.MIN_VALUE)
+        for (int j = 0; j < 4; j++) {
+            if (actions[j] == Integer.MIN_VALUE)
                 oldQs[row][column][j] = actions[j];
         }
 
@@ -117,12 +117,15 @@ public class Agent {
      * @param prob Chance to go in desired direction
      */
     public void move(Direction d, double prob) {
+        double epsilon = 0.1;
         int nrow = row, ncolumn = column;
         int dir = d.getValue();
         Random random = new Random();
         double r = random.nextDouble();
-
-        if (r > prob) { //Turns randomly based on a specified probability chance
+        if(r < epsilon){
+            dir = random.nextInt(4);
+        }
+        else if (r > prob) { //Turns randomly based on a specified probability chance
             if (random.nextBoolean()) //50% chance counterclockwise turn, 50% clockwise
                 dir = (dir + 1) % 4; //Clockwise
             else

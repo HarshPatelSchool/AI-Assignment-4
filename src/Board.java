@@ -6,8 +6,10 @@ import java.util.List;
 public class Board {
     private File file; //Text file that contains the board
     private int[][] board; //Array containing the terrain complexity
+
     /**
      * Creates a new Board object from a text file
+     *
      * @param file Source file of the board
      * @throws IOException
      */
@@ -18,6 +20,7 @@ public class Board {
 
     /**
      * Creates an array representing the board
+     *
      * @return char array with the terrain complexity, start, and goal
      * @throws IOException
      */
@@ -27,15 +30,15 @@ public class Board {
         int[] row; //Initializes a row of the board
 
         /*Adds the row values to the board array*/
-        for(int i = 0; i < boardS.size(); i++){
+        for (int i = 0; i < boardS.size(); i++) {
             String line = (String) boardS.get(i);
             String[] strings = line.split("\t");
             row = new int[strings.length];
-            for(int j = 0; j < row.length; j++)
+            for (int j = 0; j < row.length; j++)
                 row[j] = Integer.parseInt(strings[j]);
-            if(i == 0) //Sets the size of the board after the first row
+            if (i == 0) //Sets the size of the board after the first row
                 board = new int[boardS.size()][row.length];
-            board[i]=row; //Adds the row to the board
+            board[i] = row; //Adds the row to the board
         }
         return board; //Returns the completed board
     }
@@ -43,13 +46,14 @@ public class Board {
     public int getVal(int row, int column) {
         try {
             return board[row][column]; //Gets val at coordinate.
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Integer.MIN_VALUE;
         }
     }
 
     /**
      * Returns the board
+     *
      * @return int[][] that contains the terrain complexity of the board
      */
     public int[][] getBoard() {
@@ -58,6 +62,7 @@ public class Board {
 
     /**
      * Returns the file of the board
+     *
      * @return the .txt file
      */
     public File getFile() {
